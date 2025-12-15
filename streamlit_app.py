@@ -55,7 +55,7 @@ st.markdown("""
     }
     
     section[data-testid="stSidebar"] label,
-    section[data-testid="stSidebar"] span,
+    section[data-testid="stSidebar"] span:not(.accent),
     section[data-testid="stSidebar"] div[data-testid="stMarkdown"],
     section[data-testid="stSidebar"] div[data-testid="stSliderTickBarMin"],
     section[data-testid="stSidebar"] div[data-testid="stSliderTickBarMax"] {
