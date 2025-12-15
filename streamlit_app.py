@@ -493,6 +493,45 @@ st.plotly_chart(fig_tech, use_container_width=True)
 st.subheader("Equity Curve")
 # Use the extracted equity values
 fig_equity = go.Figure()
+
+# Calculate B&H (1st Buy) Curve
+bnh_values = [None] * len(dates) # Default to None
+first_buy_price = 0
+start_idx = -1
+
+# Find first buy date from trades
+# We need to match trade dates to our 'dates' list
+# 'trades' is a list of dicts. We find the earliest 'Buy' type.
+# Assuming trades are chronological or we sort them.
+# Let's verify trade order or just find the min date.
+buy_trades = [t for t in trades if t['type'] == 'Buy']
+if buy_trades:
+    # Get earliest buy
+    first_buy = min(buy_trades, key=lambda x: x['date']) # Ensure we get the very first
+    start_date = first_buy['date']
+    
+    # Find index in dates list
+    if start_date in dates:
+        start_idx = dates.index(start_date)
+        first_buy_price = closes[start_idx]
+        
+        # Calculate B&H series starting from this index
+        # Initial Capital is 10000 (referenced in Strategy Core, usually implied by first equity value)
+        initial_cap = 10000 
+        shares = initial_cap / first_buy_price
+        
+        for i in range(start_idx, len(dates)):
+            bnh_values[i] = shares * closes[i]
+
+# Add B&H Trace (Dark/Dimmed)
+fig_equity.add_trace(go.Scatter(
+    x=dates, y=bnh_values, 
+    mode='lines', 
+    name='B&H (1st Buy)', 
+    line=dict(color='#e3b341', width=1.5, dash='dash')
+))
+
+# Add Strategy Equity Trace (Blue)
 fig_equity.add_trace(go.Scatter(x=dates, y=equity_vals, mode='lines', name='Equity', line=dict(color='#58a6ff', width=2)))
 fig_equity.update_layout(
     height=400, 
