@@ -238,14 +238,22 @@ with st.sidebar:
 
     st.markdown("---")
     
-    # Sliders
-    ma_period = st.slider("MA Period (Days)", 50, 300, 192)
-    w_period = st.slider("Weekly RSI Period", 10, 50, 23)
-    w_buy_max = st.slider("RSI-W Buy Max", 30, 80, 63)
-    d_buy_cross = st.slider("RSI-D Buy Cross", 10, 50, 28)
-    w_sell_cross = st.slider("Sell Cross (W)", 50, 90, 68)
-    w_profit_max = st.slider("Profit Max (W)", 70, 95, 83)
-    stop_loss = st.slider("Stop Loss (%)", 0.05, 0.30, 0.18, step=0.01)
+    # Sliders using custom markdown for styling "Default" text
+    def styled_slider(label, min_v, max_v, default_v, step=None, key_suffix=""):
+        st.markdown(f"""
+        <div style="margin-bottom: -10px; font-size: 0.9em; color: #e6edf3;">
+            {label} <span style="color: #8b949e; margin-left: 5px; font-size: 0.85em;">(Def: {default_v})</span>
+        </div>
+        """, unsafe_allow_html=True)
+        return st.slider("", min_v, max_v, default_v, step=step, label_visibility="collapsed", key=f"slider_{key_suffix}_{label}")
+
+    ma_period = styled_slider("MA Period (Days)", 50, 300, 192, key_suffix="ma")
+    w_period = styled_slider("Weekly RSI Period", 10, 50, 23, key_suffix="w_p")
+    w_buy_max = styled_slider("RSI-W Buy Max", 30, 80, 63, key_suffix="w_buy")
+    d_buy_cross = styled_slider("RSI-D Buy Cross", 10, 50, 28, key_suffix="d_buy")
+    w_sell_cross = styled_slider("Sell Cross (W)", 50, 90, 68, key_suffix="w_sell")
+    w_profit_max = styled_slider("Profit Max (W)", 70, 95, 83, key_suffix="w_prof")
+    stop_loss = styled_slider("Stop Loss (%)", 0.05, 0.30, 0.18, step=0.01, key_suffix="stop")
 
     if st.button("Reset to Defaults", type="primary"):
         st.rerun()
