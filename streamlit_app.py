@@ -237,7 +237,9 @@ with st.sidebar:
             st.rerun()
 
     # Start Date (Default: 2010-02-01)
-    start_date_input = st.date_input("Start Date", value=datetime(2010, 2, 1))
+    min_date = datetime(2000, 1, 1)
+    max_date = datetime.now()
+    start_date_input = st.date_input("Start Date", value=datetime(2010, 2, 1), min_value=min_date, max_value=max_date)
     start_date_str = start_date_input.strftime("%Y-%m-%d")
 
     st.markdown("---")
