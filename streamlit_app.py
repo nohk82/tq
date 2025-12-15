@@ -45,10 +45,10 @@ st.markdown("""
     
     /* Hide Streamlit Standard UI */
     #MainMenu {visibility: hidden;}
-    header {visibility: hidden;}
+    /* header {visibility: hidden;} */
     footer {visibility: hidden;}
     [data-testid="stToolbar"] {visibility: hidden; display: none;}
-    .stApp > header {display: none;}
+    /* .stApp > header {display: none;} */
     
     /* Accent Color */
     .accent { color: #58a6ff !important; font-weight: bold; }
