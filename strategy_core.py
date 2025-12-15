@@ -27,7 +27,8 @@ def get_data(symbol, start_date):
         col = 'Adj Close' if 'Adj Close' in df.columns else 'Close'
         df = df[[col]].rename(columns={col: 'Close'})
         df.index = df.index.tz_localize(None)
-        return df.sort_index()
+        df = df.sort_index()
+        return df[~df.index.duplicated(keep='last')]
     except Exception as e:
         print(f"Data download error: {e}")
         return pd.DataFrame()
@@ -197,10 +198,8 @@ def get_strategy_data(symbol=SYMBOL, params=None):
     mdd = drawdown.min()
 
     # Live Diagnosis
-    last_idx = df.index[-1]
-    prev_idx = df.index[-2]
-    today_row = df.loc[last_idx]
-    prev_row = df.loc[prev_idx]
+    today_row = df.iloc[-1]
+    prev_row = df.iloc[-2]
 
     curr_p = today_row['Close']
     curr_ma = today_row['MA']
