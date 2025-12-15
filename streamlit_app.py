@@ -474,9 +474,13 @@ fig_tech.update_layout(
     plot_bgcolor='rgba(0,0,0,0)',
     xaxis=dict(
         showgrid=True, 
-        gridcolor='#21262d', # Dark Gray Grid
-        tickformat="%Y-%m-%d", # Show Dates Explicitly
-        type="date" # Ensure Date Axis
+        gridcolor='#21262d', 
+        tickformat="%Y-%m-%d", 
+        type="date",
+        showticklabels=True, # Force labels
+        automargin=True, # Prevent cutoff
+        tickangle=-45, # Tilt for better fit
+        nticks=20 # Suggest approximately 20 ticks
     ),
     yaxis=dict(
         showgrid=True, 
