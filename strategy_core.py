@@ -15,17 +15,37 @@ DEFAULT_PARAMS = {'ma_period': 192, 'd_period': 3, 'w_period': 23, 'w_buy_max': 
 
 def get_data(symbol, start_date):
     try:
+        # Uppercase symbol for consistency
+        symbol = symbol.upper()
+
         df = yf.download(symbol, start=start_date, progress=False, auto_adjust=True)
         if df.empty: return pd.DataFrame()
 
+        # Handle MultiIndex Columns (typical in new yfinance)
         if isinstance(df.columns, pd.MultiIndex):
-            try:
-                df = df.xs(symbol, axis=1, level=1)
-            except:
-                pass
+            # Try to fetch level 0 first if it looks like (Price, Ticker)
+            # If columns are (Price, Ticker), we want 'Close' or 'Adj Close'
+            # yf.download usually returns:
+            # Price  Adj Close   Close ...
+            # Ticker  TQQQ       TQQQ
+             try:
+                 # Flatten matching symbol
+                 df = df.xs(symbol, axis=1, level=1)
+             except KeyError:
+                 # If symbol level missing, maybe it's level 0? Or just dropped?
+                 df.columns = df.columns.droplevel(1)
+
+        # Handle duplicate columns if any
+        df = df.loc[:, ~df.columns.duplicated()]
 
         col = 'Adj Close' if 'Adj Close' in df.columns else 'Close'
-        df = df[[col]].rename(columns={col: 'Close'})
+        if col not in df.columns:
+            # Last ditch: take first column
+            df = df.iloc[:, [0]]
+            df.columns = ['Close']
+        else:
+            df = df[[col]].rename(columns={col: 'Close'})
+        
         df.index = df.index.tz_localize(None)
         df = df.sort_index()
         return df[~df.index.duplicated(keep='last')]
@@ -202,11 +222,11 @@ def get_strategy_data(symbol=SYMBOL, params=None):
     today_row = df.iloc[-1]
     prev_row = df.iloc[-2]
 
-    curr_p = today_row['Close']
-    curr_ma = today_row['MA']
-    cur_rd = today_row['RSI_D']
-    pre_rd = prev_row['RSI_D']
-    cur_rw = today_row['RSI_W']
+    curr_p = float(today_row['Close'])
+    curr_ma = float(today_row['MA'])
+    cur_rd = float(today_row['RSI_D'])
+    pre_rd = float(prev_row['RSI_D'])
+    cur_rw = float(today_row['RSI_W'])
     is_bull = curr_p > curr_ma
 
     cond_buy = (cur_rw < params['w_buy_max']) and (pre_rd < params['d_buy_cross']) and (cur_rd >= params['d_buy_cross'])
