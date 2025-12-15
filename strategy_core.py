@@ -244,6 +244,11 @@ def get_strategy_data(symbol=SYMBOL, params=None):
         action_msg = "과열권 도달. 수익 실현 추천."
 
 
+
+    # Calculate win stats
+    total_trades = len([t for t in trades if t['type'] == 'Sell'])
+    win_rate = (win_count / total_trades * 100) if total_trades > 0 else 0
+
     # Determine Active Status ID (0=Bearish, 1=Wait, 2=Buy, 3=Hold, 4=Sell, 5=Profit)
     active_status_id = 1 # Default to Wait
     
