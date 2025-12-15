@@ -63,18 +63,23 @@ st.markdown("""
     }
     
     /* 2. Transparent Header (Remove White Bar) */
+    /* Instead of transparent, we match the App Background Color to avoid layering issues */
     header[data-testid="stHeader"] {
-        background: transparent !important;
-        background-color: transparent !important;
+        background-color: #0d1117 !important; /* Match App BG */
         border-bottom: none !important;
+        z-index: 100 !important;
     }
 
     /* 3. Ensure Sidebar Toggle is Visible & White */
+    /* Force Fixed Position to guarantee it stays on top */
     [data-testid="stSidebarCollapsedControl"] {
         display: block !important;
         color: #e6edf3 !important;
-        background: transparent !important;
-        z-index: 999 !important;
+        background-color: #0d1117 !important; /* Match BG */
+        position: fixed !important; 
+        top: 20px !important;
+        left: 20px !important;
+        z-index: 100000 !important;
     }
     [data-testid="stSidebarCollapsedControl"] > svg {
         fill: #e6edf3 !important;
