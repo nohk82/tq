@@ -45,8 +45,29 @@ st.markdown("""
         padding: 15px;
         text-align: center;
     }
-    .metric-lbl { font-size: 0.8em; color: #8b949e; margin-bottom: 5px; }
+    .metric-lbl { font-size: 0.9em; color: #c9d1d9 !important; margin-bottom: 5px; } /* Brightened Label */
     .metric-val { font-size: 1.2em; font-weight: bold; color: #f0f6fc; }
+    
+    /* Top Bar Grid */
+    .top-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    .top-grid-2 {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    .top-item {
+        background-color: #161b22;
+        border: 1px solid #30363d;
+        border-radius: 8px;
+        padding: 10px;
+        text-align: center;
+    }
     
     /* Condition Boxes */
     .cond-box {
@@ -130,22 +151,57 @@ with st.spinner('Calculating Strategy...'):
 # =========================================================
 
 # 1. TOP METRICS
-# Row 1: Market Info
-m1, m2, m3, m4 = st.columns(4)
-m1.metric("Price", f"${data['diagnosis']['price']:,.2f}")
-m2.metric("MA(200)", f"${data['diagnosis']['ma']:,.2f}")
-m3.metric("RSI(W)", f"{data['diagnosis']['rsi_w']:.1f}")
-m4.metric("RSI(D)", f"{data['diagnosis']['rsi_d']:.1f}")
+# Using Custom HTML for exact styling control (Bright labels, Custom Colors)
 
-st.markdown("<div style='height: 10px'></div>", unsafe_allow_html=True)
+# Diagnosis Keys Map
+diag = data['diagnosis']
 
-# Row 2: Strategy Results
-s1, s2, s3, s4, s5 = st.columns(5)
-s1.metric("CAGR", f"{data['cagr']:.1f}%")
-s2.metric("MDD", f"{data['mdd']:.1f}%")
-s3.metric("Final Balance", f"${int(data['final_balance']):,}")
-s4.metric("B&H (Start)", f"${int(data['bnh_start']):,}")
-s5.metric("B&H (1st Buy)", f"${int(data['bnh_first_buy']):,}")
+html_stats = f"""
+<!-- Row 1: Market Info -->
+<div class="top-grid">
+    <div class="top-item">
+        <div class="metric-lbl">Price</div>
+        <div class="metric-val">${diag['price']:,.2f}</div>
+    </div>
+    <div class="top-item">
+        <div class="metric-lbl">MA(200)</div>
+        <div class="metric-val">${diag['ma']:,.2f}</div>
+    </div>
+    <div class="top-item">
+        <div class="metric-lbl">RSI(W)</div>
+        <div class="metric-val">{diag['rsi_w']:.1f}</div>
+    </div>
+    <div class="top-item">
+        <div class="metric-lbl">RSI(D)</div>
+        <div class="metric-val">{diag['rsi_d']:.1f}</div>
+    </div>
+</div>
+
+<!-- Row 2: Strategy Results -->
+<div class="top-grid-2">
+    <div class="top-item">
+        <div class="metric-lbl">CAGR</div>
+        <div class="metric-val accent">{data['cagr']:.1f}%</div> <!-- Sky Blue -->
+    </div>
+    <div class="top-item">
+        <div class="metric-lbl">MDD</div>
+        <div class="metric-val red">{data['mdd']:.1f}%</div> <!-- Red -->
+    </div>
+    <div class="top-item">
+        <div class="metric-lbl">Final Balance</div>
+        <div class="metric-val">${int(data['final_balance']):,}</div>
+    </div>
+    <div class="top-item">
+        <div class="metric-lbl">B&H (Start)</div>
+        <div class="metric-val">${int(data['bnh_start']):,}</div>
+    </div>
+    <div class="top-item">
+        <div class="metric-lbl">B&H (1st Buy)</div>
+        <div class="metric-val">${int(data['bnh_first_buy']):,}</div>
+    </div>
+</div>
+"""
+st.markdown(html_stats, unsafe_allow_html=True)
 
 st.markdown("---")
 
@@ -259,7 +315,13 @@ fig_tech.add_trace(go.Scatter(
 # Since we import strategy_core, we could call get_data and calc RSI locally?
 # For now, let's stick to what's available: Price + Equity.)
 
-fig_tech.update_layout(height=600, template="plotly_dark", margin=dict(l=0, r=0, t=0, b=0))
+fig_tech.update_layout(
+    height=600, 
+    template="plotly_dark", 
+    margin=dict(l=0, r=0, t=0, b=0),
+    paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)'
+)
 st.plotly_chart(fig_tech, use_container_width=True)
 
 # --- CHART 2: EQUITY CURVE ---
@@ -267,7 +329,13 @@ st.subheader("Equity Curve")
 # Use the extracted equity values
 fig_equity = go.Figure()
 fig_equity.add_trace(go.Scatter(x=dates, y=equity_vals, mode='lines', name='Equity', line=dict(color='#58a6ff', width=2)))
-fig_equity.update_layout(height=400, template="plotly_dark", margin=dict(l=0, r=0, t=0, b=0))
+fig_equity.update_layout(
+    height=400, 
+    template="plotly_dark", 
+    margin=dict(l=0, r=0, t=0, b=0),
+    paper_bgcolor='rgba(0,0,0,0)',
+    plot_bgcolor='rgba(0,0,0,0)'
+)
 st.plotly_chart(fig_equity, use_container_width=True)
 
 # =========================================================
