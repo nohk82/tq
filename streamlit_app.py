@@ -152,18 +152,19 @@ st.markdown("""
     .history-container {
         display: flex;
         flex-wrap: nowrap;
-        overflow-x: auto;
+        overflow-x: hidden; /* Hide scrollbar if possible, but fit content */
         background-color: #161b22;
         border: 1px solid #30363d;
         border-radius: 8px;
-        padding: 8px;
+        padding: 5px 10px; /* Tighter padding */
         margin-bottom: 20px;
         align-items: center;
-        gap: 5px;
+        gap: 2px; /* Tighter gap */
+        justify-content: center; /* Center align items */
     }
     .hist-item {
-        font-size: 1.2em;
-        min-width: 25px;
+        font-size: 0.9em; /* Smaller font */
+        min-width: 15px; /* Smaller width */
         text-align: center;
         cursor: default;
     }
