@@ -223,12 +223,11 @@ with st.sidebar:
     st.markdown("## Strategy<span class='accent'>Pro</span>", unsafe_allow_html=True)
     
     # Symbol & Search Button
-    c1, c2 = st.columns([3, 1])
+    # Use vertical_alignment="bottom" to align Input Label and Button correctly
+    c1, c2 = st.columns([3, 1], vertical_alignment="bottom")
     with c1:
         symbol = st.text_input("Target Symbol", value="TQQQ")
     with c2:
-        # Align button with input box (approx 28px top margin)
-        st.markdown("<div style='margin-top: 29px;'></div>", unsafe_allow_html=True)
         if st.button("🔍", key="search_btn", help="Search"):
             st.rerun()
 
