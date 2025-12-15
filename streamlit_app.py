@@ -147,6 +147,29 @@ st.markdown("""
     .status-emoji { font-size: 1.8em; margin-bottom: 5px; }
     .status-text { font-size: 0.9em; font-weight: bold; color: #8b949e; }
     .status-box.active .status-text { color: #f0f6fc; }
+    
+    /* History Strip */
+    .history-container {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        background-color: #161b22;
+        border: 1px solid #30363d;
+        border-radius: 8px;
+        padding: 8px;
+        margin-bottom: 20px;
+        align-items: center;
+        gap: 5px;
+    }
+    .hist-item {
+        font-size: 1.2em;
+        min-width: 25px;
+        text-align: center;
+        cursor: default;
+    }
+    .hist-item:hover {
+        transform: scale(1.2);
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -274,6 +297,35 @@ html_stats = f"""
     </div>
 </div>
 
+<!-- History Strip (Last 30 Days) -->
+<div class="history-container">
+    <div style="font-size: 0.8em; color: #8b949e; margin-right: 10px; white-space: nowrap;">Recent Activity (30d):</div>
+    <!-- Icons inserted here via Python loop -->
+"""
+
+# Extract last 30 days status
+recent_curve = data['equity_curve'][-35:] # Get a bit more, user said approx 30
+# Mapping: 0=Bear, 1=Wait, 2=Buy, 3=Hold, 4=Profit, 5/6=Sell
+# Note: Strategy Core 's' values: 0=Bear, 1=Wait/Bull, 2=Buy, 3=Hold, 4=Profit, 5=Stop, 6=Break
+status_map = {
+    0: "⛔", # Bearish
+    1: "💤", # Wait
+    2: "🔥", # Buy
+    3: "👌", # Hold
+    4: "💰", # Profit
+    5: "⚠️", # Sell (Stop)
+    6: "⚠️"  # Sell (Break)
+}
+
+hist_html = ""
+for day in recent_curve:
+    s = day.get('s', 1)
+    icon = status_map.get(s, "❓")
+    date_str = day['date']
+    # Tooltip with date
+    hist_html += f"<div class='hist-item' title='{date_str}'>{icon}</div>"
+
+html_stats += hist_html + "</div>" + """
 <!-- Row 2: Strategy Results -->
 <div class="top-grid-2">
     <div class="top-item">
