@@ -43,6 +43,13 @@ st.markdown("""
         margin: 1rem 0 !important;
     }
     
+    /* Hide Streamlit Standard UI */
+    #MainMenu {visibility: hidden;}
+    header {visibility: hidden;}
+    footer {visibility: hidden;}
+    [data-testid="stToolbar"] {visibility: hidden; display: none;}
+    .stApp > header {display: none;}
+    
     /* Accent Color */
     .accent { color: #58a6ff !important; font-weight: bold; }
     .red { color: #f85149 !important; font-weight: bold; }
