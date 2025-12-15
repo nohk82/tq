@@ -244,9 +244,24 @@ def get_strategy_data(symbol=SYMBOL, params=None):
         action_msg = "과열권 도달. 수익 실현 추천."
 
 
-    # Calculate win stats
-    total_trades = len([t for t in trades if t['type'] == 'Sell'])
-    win_rate = (win_count / total_trades * 100) if total_trades > 0 else 0
+    # Determine Active Status ID (0=Bearish, 1=Wait, 2=Buy, 3=Hold, 4=Sell, 5=Profit)
+    active_status_id = 1 # Default to Wait
+    
+    if not is_bull:
+        active_status_id = 0 # Bearish
+    elif cond_buy:
+        active_status_id = 2 # Buy
+    elif in_pos:
+        # Check if any sell signal is active TODAY
+        if cond_profit_max:
+             active_status_id = 5 # Profit
+        elif cond_trend_break or cond_ma: # MA Break is also a sell signal
+             active_status_id = 4 # Sell
+        else:
+             active_status_id = 3 # Hold
+    else:
+        # Bullish but no signal and not in pos -> Wait
+        active_status_id = 1
 
     # Benchmarks (Buy & Hold)
     bnh_start = 0
@@ -298,7 +313,8 @@ def get_strategy_data(symbol=SYMBOL, params=None):
             "is_rsi_d_cross": bool((pre_rd < params['d_buy_cross']) and (cur_rd >= params['d_buy_cross'])),
             "cond_buy": bool(cond_buy),
             "cond_trend_break": bool(cond_trend_break),
-            "cond_profit_max": bool(cond_profit_max)
+            "cond_profit_max": bool(cond_profit_max),
+            "active_status_id": int(active_status_id) # 0..5
         },
         "trades": trades[::-1], # Newest first
         "equity_curve": equity_curve
