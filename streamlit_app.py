@@ -44,29 +44,17 @@ st.markdown("""
     }
     
     /* ======================================= */
-    /* 🛠️ SIDEBAR & HEADER RESET (Debugging)   */
+    /* 🛠️ SIDEBAR & HEADER CONFIGURATION       */
     /* ======================================= */
     
-    /* REMOVING ALL HIDING RULES TO RESTORE DEFAULT */
-    /*
-    header[data-testid="stHeader"] {
-        background: transparent !important;
+    /* Ensure Sidebar is visible */
+    section[data-testid="stSidebar"] {
+        display: block;
     }
-    [data-testid="stSidebarCollapsedControl"] {
-        display: block !important;
-        color: #e6edf3 !important;
-    }
-    */
-    
-    /* Only hide specific cluttered elements if requested, but for now SHOW ALL */
+
+    /* Optional: Minimize clutter if needed, but keeping standard for safety */
     /* #MainMenu {visibility: hidden;} */
     /* footer {visibility: hidden;} */
-    /* [data-testid="stToolbar"] {visibility: hidden;} */
-    
-    /* Ensure Sidebar is visible by default rules */
-    section[data-testid="stSidebar"] {
-        display: block; /* Default */
-    }
     
     /* Start of Accent Colors  */
     .accent { color: #58a6ff !important; font-weight: bold; }
