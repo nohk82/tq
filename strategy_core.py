@@ -95,9 +95,9 @@ def get_strategy_data(symbol=SYMBOL, params=None):
         if i == 0:
             equity_curve.append({
                 "date": curr_date.strftime("%Y-%m-%d"),
-                "equity": round(curr_eq, 2),
-                "price": round(price, 2),
-                "ma": round(ma, 2),
+                "equity": round(float(curr_eq), 2),
+                "price": round(float(price), 2),
+                "ma": round(float(ma), 2),
                 "rsi_w": 0,
                 "rsi_d": 0,
                 "s": 0
@@ -126,8 +126,8 @@ def get_strategy_data(symbol=SYMBOL, params=None):
                     trades.append({
                         'date': curr_date.strftime("%Y-%m-%d"),
                         'type': 'Buy',
-                        'price': round(price, 2),
-                        'size': round(shares, 4)
+                        'price': round(float(price), 2),
+                        'size': round(float(shares), 4)
                     })
         # Sell Signal
         else:
@@ -160,11 +160,11 @@ def get_strategy_data(symbol=SYMBOL, params=None):
                 trades.append({
                     'date': curr_date.strftime("%Y-%m-%d"),
                     'type': 'Sell',
-                    'price': round(price, 2),
+                    'price': round(float(price), 2),
                     'reason': reason,
-                    'balance': round(balance, 2),
+                    'balance': round(float(balance), 2),
                     'holding_days': holding_days,
-                    'profit_pct': round(profit_pct, 2)
+                    'profit_pct': round(float(profit_pct), 2)
                 })
 
         # 3. Append to Curve (End of Day State)
@@ -176,11 +176,11 @@ def get_strategy_data(symbol=SYMBOL, params=None):
 
         equity_curve.append({
             "date": curr_date.strftime("%Y-%m-%d"),
-            "equity": round(curr_eq, 2),
-            "price": round(price, 2),
-            "ma": round(ma, 2),
-            "rsi_w": round(curr_rw, 2),
-            "rsi_d": round(curr_rd, 2),
+            "equity": round(float(curr_eq), 2),
+            "price": round(float(price), 2),
+            "ma": round(float(ma), 2),
+            "rsi_w": round(float(curr_rw), 2),
+            "rsi_d": round(float(curr_rd), 2),
             "s": daily_status
         })
 
