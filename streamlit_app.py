@@ -266,7 +266,8 @@ fig_tech = make_subplots(rows=2, cols=1, shared_xaxes=True,
 
 # Price Candle (Approximated with Line + Fill or just Line for simplicity as backend sends arrays)
 fig_tech.add_trace(go.Scatter(x=dates, y=closes, mode='lines', name='Price', line=dict(color='#c9d1d9', width=1)), row=1, col=1)
-fig_tech.add_trace(go.Scatter(x=dates, y=ma_line, mode='lines', name=f'MA({ma_period})', line=dict(color='#58a6ff', width=1)), row=1, col=1)
+# MA Line: User requested "Dark Color". Using a dimmed gray-blue.
+fig_tech.add_trace(go.Scatter(x=dates, y=ma_line, mode='lines', name=f'MA({ma_period})', line=dict(color='#3d444d', width=1.5)), row=1, col=1)
 
 # Add Trades (Buy/Sell Markers)
 trades = data['trades'] 
@@ -292,8 +293,8 @@ for t in trades:
         fig_tech.add_annotation(
             x=t['date'], y=t['price'],
             text=f"{profit_pct:.1f}%",
-            showarrow=True, arrowhead=1, ax=0, ay=-20,
-            font=dict(color=profit_color, size=10)
+            showarrow=True, arrowhead=1, ax=0, ay=-25,
+            font=dict(color=profit_color, size=14, family="Arial Black") # Larger font
         )
 
 # Buy Markers
@@ -320,7 +321,16 @@ fig_tech.update_layout(
     template="plotly_dark", 
     margin=dict(l=0, r=0, t=0, b=0),
     paper_bgcolor='rgba(0,0,0,0)',
-    plot_bgcolor='rgba(0,0,0,0)'
+    plot_bgcolor='rgba(0,0,0,0)',
+    xaxis=dict(
+        showgrid=True, 
+        gridcolor='#21262d', # Dark Gray Grid
+        tickformat="%Y-%m-%d" # Show Dates
+    ),
+    yaxis=dict(
+        showgrid=True, 
+        gridcolor='#21262d'
+    )
 )
 st.plotly_chart(fig_tech, use_container_width=True)
 
@@ -334,7 +344,16 @@ fig_equity.update_layout(
     template="plotly_dark", 
     margin=dict(l=0, r=0, t=0, b=0),
     paper_bgcolor='rgba(0,0,0,0)',
-    plot_bgcolor='rgba(0,0,0,0)'
+    plot_bgcolor='rgba(0,0,0,0)',
+    xaxis=dict(
+        showgrid=True, 
+        gridcolor='#21262d',
+        tickformat="%Y-%m-%d"
+    ),
+    yaxis=dict(
+        showgrid=True, 
+        gridcolor='#21262d'
+    )
 )
 st.plotly_chart(fig_equity, use_container_width=True)
 
@@ -342,48 +361,82 @@ st.plotly_chart(fig_equity, use_container_width=True)
 # 📋 RECENT TRADES
 # =========================================================
 st.subheader("Recent Trades")
+# =========================================================
+# 📋 RECENT TRADES
+# =========================================================
+st.subheader("Recent Trades")
 if trades:
-    # Trades are returned newest first. Let's reverse to process chronologically if needed,
-    # but for display we want newest first.
-    # However, to pair them (Buy -> Sell), we need to find the matching events.
-    # Strategy core returns simple list. 
-    # Let's reconstruct pairs.
+    # Use Custom HTML Table to:
+    # 1. Distinguish Buy/Sell separately (separate rows/colors)
+    # 2. Show all without scrolling (full height)
+    # 3. Dark background
     
-    # Sort by date ascending to pair easily
-    sorted_trades = sorted(trades, key=lambda x: x['date'])
+    html_table = """
+    <style>
+        .trade-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9em;
+        }
+        .trade-table th {
+            text-align: left;
+            padding: 10px;
+            color: #8b949e;
+            border-bottom: 1px solid #30363d;
+        }
+        .trade-table td {
+            padding: 10px;
+            border-bottom: 1px solid #21262d;
+            color: #c9d1d9;
+        }
+        .trade-row:hover { background-color: #161b22; }
+        .type-buy { color: #3fb950; font-weight: bold; }
+        .type-sell { color: #f85149; font-weight: bold; }
+        .profit-pos { color: #58a6ff; }
+        .profit-neg { color: #f85149; }
+    </style>
+    <table class="trade-table">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Price</th>
+                <th>Info</th>
+            </tr>
+        </thead>
+        <tbody>
+    """
     
-    trade_pairs = []
-    current_buy = None
-    
-    for t in sorted_trades:
-        if t['type'] == 'Buy':
-            current_buy = t
-        elif t['type'] == 'Sell' and current_buy:
-            # Found a pair
-            trade_pairs.append({
-                "Date": current_buy['date'],
-                "Price": f"${current_buy['price']:.2f} → ${t['price']:.2f}",
-                "Profit": f"{t['profit_pct']:.1f}%",
-                "Days": f"{t['holding_days']}d",
-                "Exit": t['reason']
-            })
-            current_buy = None
+    for t in trades: # trades is already sorted newest first by strategy_core
+        t_type = t['type']
+        t_date = t['date']
+        t_price = f"${t['price']:,.2f}"
+        
+        type_class = "type-buy" if t_type == "Buy" else "type-sell"
+        info_html = ""
+        
+        if t_type == "Sell":
+            profit = t.get('profit_pct', 0)
+            p_class = "profit-pos" if profit > 0 else "profit-neg"
+            days = t.get('holding_days', 0)
+            reason = t.get('reason', '')
+            info_html = f"<span class='{p_class}'>{profit:+.1f}%</span> <span style='color:#666'>({days}d)</span> <span style='font-size:0.8em; color:#8b949e'>{reason}</span>"
+        else:
+            info_html = "<span style='color: #444'>Entry</span>"
             
-    # Include currently holding position if any
-    if current_buy:
-         trade_pairs.append({
-                "Date": current_buy['date'],
-                "Price": f"${current_buy['price']:.2f} → -",
-                "Profit": "-",
-                "Days": "-",
-                "Exit": "Holding"
-            })
-    
-    # Show newest first
-    if trade_pairs:
-        st.dataframe(pd.DataFrame(trade_pairs[::-1]), use_container_width=True)
-    else:
-        st.info("No completed trades yet.")
+        row_html = f"""
+        <tr class="trade-row">
+            <td class="{type_class}">{t_type}</td>
+            <td>{t_date}</td>
+            <td>{t_price}</td>
+            <td>{info_html}</td>
+        </tr>
+        """
+        html_table += row_html
+        
+    html_table += "</tbody></table>"
+    st.markdown(html_table, unsafe_allow_html=True)
 
 else:
     st.info("No trades found.")
