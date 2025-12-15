@@ -86,7 +86,7 @@ st.markdown("""
     }
 
     /* Hide standard UI elements */
-    #MainMenu {visibility: hidden;}
+    /#MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     [data-testid="stToolbar"] {visibility: hidden; display: none;}
     
@@ -657,3 +657,4 @@ if trades:
     st.markdown(html_table, unsafe_allow_html=True)
 else:
     st.info("No trades found.")
+
