@@ -84,6 +84,29 @@ st.markdown("""
     .cond-title { font-weight: bold; margin-bottom: 8px; font-size: 1em; }
     .cond-list { margin: 0; padding-left: 1.2em; }
     
+    /* Trade Table Styling */
+    .trade-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.9em;
+    }
+    .trade-table th {
+        text-align: left;
+        padding: 10px;
+        color: #8b949e;
+        border-bottom: 1px solid #30363d;
+    }
+    .trade-table td {
+        padding: 10px;
+        border-bottom: 1px solid #21262d;
+        color: #c9d1d9;
+    }
+    .trade-row:hover { background-color: #161b22; }
+    .type-buy { color: #3fb950; font-weight: bold; }
+    .type-sell { color: #f85149; font-weight: bold; }
+    .profit-pos { color: #58a6ff; }
+    .profit-neg { color: #f85149; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -362,49 +385,23 @@ st.plotly_chart(fig_equity, use_container_width=True)
 # =========================================================
 st.subheader("Recent Trades")
 if trades:
-    # Use Custom HTML Table to:
-    # 1. Distinguish Buy/Sell separately (separate rows/colors)
-    # 2. Show all without scrolling (full height)
-    # 3. Dark background
+    # Custom HTML Table (Styles moved to global CSS)
     
+    # Header
     html_table = """
-<style>
-    .trade-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-family: 'Outfit', sans-serif;
-        font-size: 0.9em;
-    }
-    .trade-table th {
-        text-align: left;
-        padding: 10px;
-        color: #8b949e;
-        border-bottom: 1px solid #30363d;
-    }
-    .trade-table td {
-        padding: 10px;
-        border-bottom: 1px solid #21262d;
-        color: #c9d1d9;
-    }
-    .trade-row:hover { background-color: #161b22; }
-    .type-buy { color: #3fb950; font-weight: bold; }
-    .type-sell { color: #f85149; font-weight: bold; }
-    .profit-pos { color: #58a6ff; }
-    .profit-neg { color: #f85149; }
-</style>
-<table class="trade-table">
-    <thead>
-        <tr>
-            <th>Type</th>
-            <th>Date</th>
-            <th>Price</th>
-            <th>Info</th>
-        </tr>
-    </thead>
-    <tbody>
-"""
+    <table class="trade-table">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Price</th>
+                <th>Info</th>
+            </tr>
+        </thead>
+        <tbody>
+    """
     
-    for t in trades: # trades is already sorted newest first by strategy_core
+    for t in trades:
         t_type = t['type']
         t_date = t['date']
         t_price = f"${t['price']:,.2f}"
@@ -421,18 +418,11 @@ if trades:
         else:
             info_html = "<span style='color: #444'>Entry</span>"
             
-        row_html = f"""
-    <tr class="trade-row">
-        <td class="{type_class}">{t_type}</td>
-        <td>{t_date}</td>
-        <td>{t_price}</td>
-        <td>{info_html}</td>
-    </tr>
-"""
+        # IMPORTANT: No indentation for the HTML string to avoid Code Block rendering
+        row_html = f"""<tr class="trade-row"><td class="{type_class}">{t_type}</td><td>{t_date}</td><td>{t_price}</td><td>{info_html}</td></tr>"""
         html_table += row_html
         
     html_table += "</tbody></table>"
     st.markdown(html_table, unsafe_allow_html=True)
-
 else:
     st.info("No trades found.")
