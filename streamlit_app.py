@@ -44,43 +44,28 @@ st.markdown("""
     }
     
     /* ======================================= */
-    /* 🛠️ SIDEBAR & HEADER FIXES (Bulletproof) */
+    /* 🛠️ SIDEBAR & HEADER RESET (Debugging)   */
     /* ======================================= */
     
-    /* 1. Make Header Transparent (Fixes White Line) */
+    /* REMOVING ALL HIDING RULES TO RESTORE DEFAULT */
+    /*
     header[data-testid="stHeader"] {
         background: transparent !important;
-        background-color: transparent !important;
-        border-bottom: none !important;
-        z-index: 100 !important;
     }
-
-    /* 2. Force Sidebar Toggle (Arrow) to be Visible */
-    [data-testid="stSidebarCollapsedControl"],
-    button[kind="header"] {
+    [data-testid="stSidebarCollapsedControl"] {
         display: block !important;
-        visibility: visible !important;
-        color: #e6edf3 !important; /* Text Color */
-        background: transparent !important;
-        z-index: 99999 !important; /* Always on top */
+        color: #e6edf3 !important;
     }
+    */
     
-    /* 3. Style the Toggle Icon (SVG) */
-    [data-testid="stSidebarCollapsedControl"] svg,
-    button[kind="header"] svg {
-        fill: #e6edf3 !important;
-        stroke: #e6edf3 !important;
-    }
-
-    /* 4. Hide ONLY unwanted elements (Menu, Footer, Toolbar) */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    [data-testid="stToolbar"] {visibility: hidden; display: none;}
+    /* Only hide specific cluttered elements if requested, but for now SHOW ALL */
+    /* #MainMenu {visibility: hidden;} */
+    /* footer {visibility: hidden;} */
+    /* [data-testid="stToolbar"] {visibility: hidden;} */
     
-    /* 5. Ensure Sidebar itself is not hidden */
+    /* Ensure Sidebar is visible by default rules */
     section[data-testid="stSidebar"] {
-        display: block !important; 
-        visibility: visible !important;
+        display: block; /* Default */
     }
     
     /* Start of Accent Colors  */
