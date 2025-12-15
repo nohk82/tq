@@ -213,25 +213,29 @@ fig_tech.add_trace(go.Scatter(x=dates, y=closes, mode='lines', name='Price', lin
 fig_tech.add_trace(go.Scatter(x=dates, y=ma_line, mode='lines', name=f'MA({ma_period})', line=dict(color='#58a6ff', width=1)), row=1, col=1)
 
 # Add Trades (Buy/Sell Markers)
-trades = data['trades']
+trades = data['trades'] 
+# Note: trades is a list of events (newest first). We should reverse it or handle it.
+# Usually easiest to process oldest to newest for pairing, but markers don't care.
+
 buy_x = []
 buy_y = []
 sell_x = []
 sell_y = []
-profit_texts = [] # For annotations
 
+# Process events for markers
 for t in trades:
-    buy_x.append(t['buy_date'])
-    buy_y.append(t['buy_price'])
-    
-    if t['sell_date']:
-        sell_x.append(t['sell_date'])
-        sell_y.append(t['sell_price'])
-        # Add profit label logic
-        profit_color = '#58a6ff' if t['profit_pct'] > 0 else '#f85149'
+    if t['type'] == 'Buy':
+        buy_x.append(t['date'])
+        buy_y.append(t['price'])
+    elif t['type'] == 'Sell':
+        sell_x.append(t['date'])
+        sell_y.append(t['price'])
+        # Add profit label
+        profit_pct = t.get('profit_pct', 0)
+        profit_color = '#58a6ff' if profit_pct > 0 else '#f85149'
         fig_tech.add_annotation(
-            x=t['sell_date'], y=t['sell_price'],
-            text=f"{t['profit_pct']:.1f}%",
+            x=t['date'], y=t['price'],
+            text=f"{profit_pct:.1f}%",
             showarrow=True, arrowhead=1, ax=0, ay=-20,
             font=dict(color=profit_color, size=10)
         )
@@ -271,27 +275,47 @@ st.plotly_chart(fig_equity, use_container_width=True)
 # =========================================================
 st.subheader("Recent Trades")
 if trades:
-    # Convert list of dicts to DataFrame
-    df_trades = pd.DataFrame(trades)
-    # Reorder/Rename columns to match UI
-    # Keys: buy_date, buy_price, sell_date, sell_price, profit_pct, hold_days, exit_reason
+    # Trades are returned newest first. Let's reverse to process chronologically if needed,
+    # but for display we want newest first.
+    # However, to pair them (Buy -> Sell), we need to find the matching events.
+    # Strategy core returns simple list. 
+    # Let's reconstruct pairs.
     
-    # Format for display
-    display_data = []
-    for t in trades:
-        sell_d = t['sell_date'] if t['sell_date'] else "Holding"
-        sell_p = f"${t['sell_price']:.2f}" if t['sell_date'] else "-"
-        profit = f"{t['profit_pct']:.1f}%" if t['sell_date'] else "-"
-        
-        display_data.append({
-            "Date": t['buy_date'],
-            "Type": "Buy", # Always starts with buy
-            "Price": f"${t['buy_price']:.2f} → {sell_p}",
-            "Profit": profit,
-            "Days": f"{t['hold_days']}d",
-            "Exit": t['exit_reason']
-        })
-        
-    st.dataframe(pd.DataFrame(display_data), use_container_width=True)
+    # Sort by date ascending to pair easily
+    sorted_trades = sorted(trades, key=lambda x: x['date'])
+    
+    trade_pairs = []
+    current_buy = None
+    
+    for t in sorted_trades:
+        if t['type'] == 'Buy':
+            current_buy = t
+        elif t['type'] == 'Sell' and current_buy:
+            # Found a pair
+            trade_pairs.append({
+                "Date": current_buy['date'],
+                "Price": f"${current_buy['price']:.2f} → ${t['price']:.2f}",
+                "Profit": f"{t['profit_pct']:.1f}%",
+                "Days": f"{t['holding_days']}d",
+                "Exit": t['reason']
+            })
+            current_buy = None
+            
+    # Include currently holding position if any
+    if current_buy:
+         trade_pairs.append({
+                "Date": current_buy['date'],
+                "Price": f"${current_buy['price']:.2f} → -",
+                "Profit": "-",
+                "Days": "-",
+                "Exit": "Holding"
+            })
+    
+    # Show newest first
+    if trade_pairs:
+        st.dataframe(pd.DataFrame(trade_pairs[::-1]), use_container_width=True)
+    else:
+        st.info("No completed trades yet.")
+
 else:
     st.info("No trades found.")
