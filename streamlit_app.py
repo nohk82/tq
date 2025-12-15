@@ -516,8 +516,8 @@ if buy_trades:
         first_buy_price = closes[start_idx]
         
         # Calculate B&H series starting from this index
-        # Initial Capital is 10000 (referenced in Strategy Core, usually implied by first equity value)
-        initial_cap = 10000 
+        # align with strategy's starting capital (usually 1st equity value)
+        initial_cap = equity_vals[0] if equity_vals else 10000
         shares = initial_cap / first_buy_price
         
         for i in range(start_idx, len(dates)):
