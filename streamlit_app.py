@@ -109,7 +109,7 @@ st.markdown("""
     /* Top Bar Grid */
     .top-grid {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(5, 1fr);
         gap: 15px;
         margin-bottom: 20px;
     }
@@ -296,10 +296,15 @@ with st.spinner('Calculating Strategy...'):
 
 # Diagnosis Keys Map
 diag = data['diagnosis']
+current_date = data['equity_curve'][-1]['date']
 
 html_stats = f"""
 <!-- Row 1: Market Info -->
 <div class="top-grid">
+    <div class="top-item">
+        <div class="metric-lbl">Date</div>
+        <div class="metric-val" style="font-size: 1.1em; color: #e6edf3;">{current_date}</div>
+    </div>
     <div class="top-item">
         <div class="metric-lbl">Price</div>
         <div class="metric-val">${diag['price']:,.2f}</div>
