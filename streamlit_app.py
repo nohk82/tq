@@ -198,20 +198,17 @@ st.subheader("Technical Analysis")
 
 # Convert date strings back to datetime objects for Plotly if needed, 
 # but Plotly handles ISO strings well.
-dates = data['dates']
-closes = data['closes']
-ma_line = data['ma_line']
+# EXTRACT DATA FROM EQUITY CURVE
+eq_data = data['equity_curve']
+dates = [e['date'] for e in eq_data]
+closes = [e['price'] for e in eq_data]
+ma_line = [e['ma'] for e in eq_data]
+equity_vals = [e['equity'] for e in eq_data]
 
 fig_tech = make_subplots(rows=2, cols=1, shared_xaxes=True, 
                          vertical_spacing=0.05, row_heights=[0.7, 0.3])
 
 # Price Candle (Approximated with Line + Fill or just Line for simplicity as backend sends arrays)
-# Note: Backend sends 'closes', 'opens', etc? 
-# Checking logic: get_strategy_data returns lists. 
-# Ideally we want Candlestick but we might only have Close/MA.
-# Let's check strategy_core logic... It returns 'closes', no opens/highs/lows in the 'chart_data' dict usually?
-# Actually 'get_strategy_data' returns 'dates', 'closes', 'ma_line'. 
-# So we render a Line Chart for Price vs MA.
 fig_tech.add_trace(go.Scatter(x=dates, y=closes, mode='lines', name='Price', line=dict(color='#c9d1d9', width=1)), row=1, col=1)
 fig_tech.add_trace(go.Scatter(x=dates, y=ma_line, mode='lines', name=f'MA({ma_period})', line=dict(color='#58a6ff', width=1)), row=1, col=1)
 
@@ -263,12 +260,9 @@ st.plotly_chart(fig_tech, use_container_width=True)
 
 # --- CHART 2: EQUITY CURVE ---
 st.subheader("Equity Curve")
-equity_curve = data['equity_curve'] # List of values
-# Equity dates match the filtered dates length? 
-# Usually equity curve is calculated daily.
-# Let's plot it against the dates.
+# Use the extracted equity values
 fig_equity = go.Figure()
-fig_equity.add_trace(go.Scatter(x=dates, y=equity_curve, mode='lines', name='Equity', line=dict(color='#58a6ff', width=2)))
+fig_equity.add_trace(go.Scatter(x=dates, y=equity_vals, mode='lines', name='Equity', line=dict(color='#58a6ff', width=2)))
 fig_equity.update_layout(height=400, template="plotly_dark", margin=dict(l=0, r=0, t=0, b=0))
 st.plotly_chart(fig_equity, use_container_width=True)
 
