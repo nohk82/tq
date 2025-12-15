@@ -326,7 +326,7 @@ for day in recent_curve:
     # Tooltip with date
     hist_html += f"<div class='hist-item' title='{date_str}'>{icon}</div>"
 
-html_stats += hist_html + "</div>" + """
+html_stats += hist_html + "</div>" + f"""
 <!-- Row 2: Strategy Results -->
 <div class="top-grid-2">
     <div class="top-item">
