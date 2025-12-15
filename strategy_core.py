@@ -291,7 +291,14 @@ def get_strategy_data(symbol=SYMBOL, params=None):
             "rsi_d": round(cur_rd, 1),
             "status": status_label,
             "status_color": status_color,
-            "message": action_msg
+            "message": action_msg,
+            # Boolean Flags for Icons
+            "is_bull": bool(is_bull),
+            "is_rsi_w_safe": bool(cur_rw < params['w_buy_max']),
+            "is_rsi_d_cross": bool((pre_rd < params['d_buy_cross']) and (cur_rd >= params['d_buy_cross'])),
+            "cond_buy": bool(cond_buy),
+            "cond_trend_break": bool(cond_trend_break),
+            "cond_profit_max": bool(cond_profit_max)
         },
         "trades": trades[::-1], # Newest first
         "equity_curve": equity_curve
