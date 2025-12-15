@@ -231,7 +231,7 @@ with st.sidebar:
     # Use vertical_alignment="bottom" to align Input Label and Button correctly
     c1, c2 = st.columns([3, 1], vertical_alignment="bottom")
     with c1:
-        symbol = st.text_input("Target Symbol", value="TQQQ")
+        symbol = st.text_input("Target Symbol", value="TQQQ").upper()
     with c2:
         if st.button("🔍", key="search_btn", help="Search"):
             st.rerun()
@@ -487,6 +487,7 @@ buy_x = []
 buy_y = []
 sell_x = []
 sell_y = []
+sell_count = 0
 
 # Process events for markers
 for t in trades:
@@ -497,12 +498,19 @@ for t in trades:
         sell_x.append(t['date'])
         sell_y.append(t['price'])
         # Add profit label
+        # Alternate text position to avoid overlap
         profit_pct = t.get('profit_pct', 0)
         profit_color = '#58a6ff' if profit_pct > 0 else '#f85149'
+        
+        # Stagger offsets: -30, -60, -90
+        offset_levels = [-30, -60, -90]
+        y_offset = offset_levels[sell_count % 3]
+        sell_count += 1
+        
         fig_tech.add_annotation(
             x=t['date'], y=t['price'],
             text=f"{profit_pct:.1f}%",
-            showarrow=True, arrowhead=1, ax=0, ay=-25,
+            showarrow=True, arrowhead=1, ax=0, ay=y_offset,
             font=dict(color=profit_color, size=14, family="Arial Black") # Larger font
         )
 
