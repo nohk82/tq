@@ -43,32 +43,52 @@ st.markdown("""
         margin: 1rem 0 !important;
     }
     
-    /* Header & Sidebar Toggle Styling */
+    /* ======================================= */
+    /* 🛠️ SIDEBAR & HEADER FIXES (Bulletproof) */
+    /* ======================================= */
+    
+    /* 1. Make Header Transparent (Fixes White Line) */
     header[data-testid="stHeader"] {
+        background: transparent !important;
         background-color: transparent !important;
-    }
-    
-    /* Ensure Sidebar Toggle (Arrow) is Visible & Colored */
-    [data-testid="stSidebarCollapsedControl"] {
-        color: #e6edf3 !important;
-        background-color: transparent !important;
-    }
-    
-    [data-testid="stSidebarCollapsedControl"] > svg {
-        fill: #e6edf3 !important;
+        border-bottom: none !important;
+        z-index: 100 !important;
     }
 
-    /* Hide Streamlit Standard UI Elements (Menu, Footer) */
+    /* 2. Force Sidebar Toggle (Arrow) to be Visible */
+    [data-testid="stSidebarCollapsedControl"],
+    button[kind="header"] {
+        display: block !important;
+        visibility: visible !important;
+        color: #e6edf3 !important; /* Text Color */
+        background: transparent !important;
+        z-index: 99999 !important; /* Always on top */
+    }
+    
+    /* 3. Style the Toggle Icon (SVG) */
+    [data-testid="stSidebarCollapsedControl"] svg,
+    button[kind="header"] svg {
+        fill: #e6edf3 !important;
+        stroke: #e6edf3 !important;
+    }
+
+    /* 4. Hide ONLY unwanted elements (Menu, Footer, Toolbar) */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     [data-testid="stToolbar"] {visibility: hidden; display: none;}
     
-    /* Start of Accent Colors */
+    /* 5. Ensure Sidebar itself is not hidden */
+    section[data-testid="stSidebar"] {
+        display: block !important; 
+        visibility: visible !important;
+    }
+    
+    /* Start of Accent Colors  */
     .accent { color: #58a6ff !important; font-weight: bold; }
     .red { color: #f85149 !important; font-weight: bold; }
     .green { color: #3fb950 !important; font-weight: bold; }
     
-    /* Custom Box Styling */
+    /* Metric Box */
     .metric-box {
         background-color: #161b22;
         border: 1px solid #30363d;
