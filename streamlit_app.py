@@ -107,6 +107,35 @@ st.markdown("""
     .type-sell { color: #f85149; font-weight: bold; }
     .profit-pos { color: #58a6ff; }
     .profit-neg { color: #f85149; }
+    
+    /* Status Icon Box (New 6-State Style) */
+    .status-container {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+    .status-box {
+        background-color: #161b22;
+        border: 1px solid #30363d;
+        border-radius: 12px;
+        padding: 10px 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 80px;
+        opacity: 0.5; /* Default Dimmed */
+        transition: all 0.3s;
+    }
+    .status-box.active {
+        opacity: 1.0;
+        border: 2px solid #58a6ff; /* Blue Highlight */
+        box-shadow: 0 0 10px rgba(88, 166, 255, 0.3);
+        background-color: #1f242c;
+    }
+    .status-emoji { font-size: 1.8em; margin-bottom: 5px; }
+    .status-text { font-size: 0.9em; font-weight: bold; color: #8b949e; }
+    .status-box.active .status-text { color: #f0f6fc; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -200,25 +229,37 @@ html_stats = f"""
     </div>
 </div>
 
-<!-- Row 1.5: Status Icons (HIGHLIGHTED) -->
-<div style="display: flex; gap: 10px; margin-bottom: 20px; justify-content: center;">
-    <div class="status-icon {'active' if diag['is_bull'] else ''}" style="background-color: {'#3fb950' if diag['is_bull'] else '#30363d'}; padding: 5px 10px; border-radius: 5px; font-size: 0.8em; color: white;">
-        📈 Trend
+<!-- Row 1.5: Status Icons (6-State System) -->
+<div class="status-container">
+    <!-- 0: Bearish -->
+    <div class="status-box {'active' if diag['active_status_id'] == 0 else ''}">
+        <div class="status-emoji">⛔</div>
+        <div class="status-text">Bearish</div>
     </div>
-    <div class="status-icon" style="background-color: {'#3fb950' if diag['is_rsi_w_safe'] else '#30363d'}; padding: 5px 10px; border-radius: 5px; font-size: 0.8em; color: white;">
-        📉 RSI(W) Safe
+    <!-- 1: Wait -->
+    <div class="status-box {'active' if diag['active_status_id'] == 1 else ''}">
+        <div class="status-emoji">💤</div>
+        <div class="status-text">Wait</div>
     </div>
-    <div class="status-icon" style="background-color: {'#3fb950' if diag['is_rsi_d_cross'] else '#30363d'}; padding: 5px 10px; border-radius: 5px; font-size: 0.8em; color: white;">
-        ⚡ RSI(D) Cross
+    <!-- 2: Buy -->
+    <div class="status-box {'active' if diag['active_status_id'] == 2 else ''}">
+        <div class="status-emoji">🔥</div>
+        <div class="status-text">Buy</div>
     </div>
-    <div class="status-icon" style="background-color: {'#3fb950' if diag['cond_buy'] else '#30363d'}; padding: 5px 10px; border-radius: 5px; font-size: 0.8em; color: white;">
-        💰 Buy Signal
+    <!-- 3: Hold -->
+    <div class="status-box {'active' if diag['active_status_id'] == 3 else ''}">
+        <div class="status-emoji">👌</div>
+        <div class="status-text">Hold</div>
     </div>
-    <div class="status-icon" style="background-color: {'#f85149' if diag['cond_trend_break'] else '#30363d'}; padding: 5px 10px; border-radius: 5px; font-size: 0.8em; color: white;">
-        💔 Trend Broken
+    <!-- 4: Sell -->
+    <div class="status-box {'active' if diag['active_status_id'] == 4 else ''}">
+        <div class="status-emoji">⚠️</div>
+        <div class="status-text">Sell</div>
     </div>
-    <div class="status-icon" style="background-color: {'#d29922' if diag['cond_profit_max'] else '#30363d'}; padding: 5px 10px; border-radius: 5px; font-size: 0.8em; color: white;">
-        🤑 Profit Max
+    <!-- 5: Profit -->
+    <div class="status-box {'active' if diag['active_status_id'] == 5 else ''}">
+        <div class="status-emoji">💰</div>
+        <div class="status-text">Profit</div>
     </div>
 </div>
 
