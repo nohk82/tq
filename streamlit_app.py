@@ -43,42 +43,27 @@ st.markdown("""
         margin: 1rem 0 !important;
     }
     
-    /* Header Optimization */
+    /* Header & Sidebar Toggle Styling */
     header[data-testid="stHeader"] {
         background-color: transparent !important;
-        background: transparent !important;
-        visibility: visible !important;
-        z-index: 999;
     }
     
-    /* Ensure Sidebar Toggle (Arrow) is Visible */
+    /* Ensure Sidebar Toggle (Arrow) is Visible & Colored */
     [data-testid="stSidebarCollapsedControl"] {
-        display: block !important;
-        visibility: visible !important;
         color: #e6edf3 !important;
         background-color: transparent !important;
-        z-index: 100000 !important;
-        top: 1rem !important; /* Force position if needed */
     }
     
-    /* Target the SVG icon inside specifically */
-    [data-testid="stSidebarCollapsedControl"] svg {
+    [data-testid="stSidebarCollapsedControl"] > svg {
         fill: #e6edf3 !important;
-        stroke: #e6edf3 !important;
-    }
-    
-    /* Additional coverage for newer Streamlit versions */
-    button[kind="header"] {
-        display: block !important;
-        visibility: visible !important;
-        z-index: 100000 !important;
     }
 
     /* Hide Streamlit Standard UI Elements (Menu, Footer) */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     [data-testid="stToolbar"] {visibility: hidden; display: none;}
-    /* .stApp > header {display: none;} -- Keep header for toggle, but transparent */
+    
+    /* Start of Accent Colors */
     .accent { color: #58a6ff !important; font-weight: bold; }
     .red { color: #f85149 !important; font-weight: bold; }
     .green { color: #3fb950 !important; font-weight: bold; }
