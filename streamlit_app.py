@@ -200,6 +200,28 @@ html_stats = f"""
     </div>
 </div>
 
+<!-- Row 1.5: Status Icons (HIGHLIGHTED) -->
+<div style="display: flex; gap: 10px; margin-bottom: 20px; justify-content: center;">
+    <div class="status-icon {'active' if diag['is_bull'] else ''}" style="background-color: {'#3fb950' if diag['is_bull'] else '#30363d'}; padding: 5px 10px; border-radius: 5px; font-size: 0.8em; color: white;">
+        📈 Trend
+    </div>
+    <div class="status-icon" style="background-color: {'#3fb950' if diag['is_rsi_w_safe'] else '#30363d'}; padding: 5px 10px; border-radius: 5px; font-size: 0.8em; color: white;">
+        📉 RSI(W) Safe
+    </div>
+    <div class="status-icon" style="background-color: {'#3fb950' if diag['is_rsi_d_cross'] else '#30363d'}; padding: 5px 10px; border-radius: 5px; font-size: 0.8em; color: white;">
+        ⚡ RSI(D) Cross
+    </div>
+    <div class="status-icon" style="background-color: {'#3fb950' if diag['cond_buy'] else '#30363d'}; padding: 5px 10px; border-radius: 5px; font-size: 0.8em; color: white;">
+        💰 Buy Signal
+    </div>
+    <div class="status-icon" style="background-color: {'#f85149' if diag['cond_trend_break'] else '#30363d'}; padding: 5px 10px; border-radius: 5px; font-size: 0.8em; color: white;">
+        💔 Trend Broken
+    </div>
+    <div class="status-icon" style="background-color: {'#d29922' if diag['cond_profit_max'] else '#30363d'}; padding: 5px 10px; border-radius: 5px; font-size: 0.8em; color: white;">
+        🤑 Profit Max
+    </div>
+</div>
+
 <!-- Row 2: Strategy Results -->
 <div class="top-grid-2">
     <div class="top-item">
