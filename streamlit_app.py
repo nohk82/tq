@@ -86,9 +86,9 @@ st.markdown("""
     }
 
     /* Hide standard UI elements */
-    /#MainMenu {visibility: hidden;}
+    /* #MainMenu {visibility: hidden;} */
     footer {visibility: hidden;}
-    [data-testid="stToolbar"] {visibility: hidden; display: none;}
+    /* [data-testid="stToolbar"] {visibility: hidden; display: none;} */
     
     /* Start of Accent Colors  */
     .accent { color: #58a6ff !important; font-weight: bold; }
@@ -657,4 +657,3 @@ if trades:
     st.markdown(html_table, unsafe_allow_html=True)
 else:
     st.info("No trades found.")
-
