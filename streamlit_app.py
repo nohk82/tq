@@ -437,6 +437,7 @@ with c2:
             <li>1. 추세상승: C > MA (장기이평선 위)</li>
             <li>2. 주봉RSI < 63 (과매수 아님)</li>
             <li>3. 일봉RSI 28 돌파 (1,2 만족 시)</li>
+            <li>4. 초기 투자금 $1,000</li>
         </ul>
     </div>
     """, unsafe_allow_html=True)
