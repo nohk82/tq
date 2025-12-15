@@ -485,6 +485,9 @@ fig_tech.update_layout(
     yaxis=dict(
         showgrid=True, 
         gridcolor='#21262d'
+    ),
+    legend=dict(
+        font=dict(color="white") # Legend Text White
     )
 )
 st.plotly_chart(fig_tech, use_container_width=True)
@@ -528,7 +531,7 @@ fig_equity.add_trace(go.Scatter(
     x=dates, y=bnh_values, 
     mode='lines', 
     name='B&H (1st Buy)', 
-    line=dict(color='#e3b341', width=1.5, dash='dash')
+    line=dict(color='#e3b341', width=1.5) # Solid Yellow Line
 ))
 
 # Add Strategy Equity Trace (Blue)
@@ -547,6 +550,9 @@ fig_equity.update_layout(
     yaxis=dict(
         showgrid=True, 
         gridcolor='#21262d'
+    ),
+    legend=dict(
+        font=dict(color="white") # Legend Text White
     )
 )
 st.plotly_chart(fig_equity, use_container_width=True)
