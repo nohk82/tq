@@ -43,14 +43,27 @@ st.markdown("""
         margin: 1rem 0 !important;
     }
     
-    /* Hide Streamlit Standard UI */
+    /* Header Optimization */
+    header[data-testid="stHeader"] {
+        background-color: transparent !important;
+        z-index: 999;
+    }
+    
+    /* Ensure Sidebar Toggle (Arrow) is Visible */
+    button[data-testid="stSidebarCollapsedControl"] {
+        display: block !important;
+        color: #e6edf3 !important;
+        background-color: transparent !important;
+    }
+    [data-testid="stSidebarCollapsedControl"] > svg {
+        fill: #e6edf3 !important;
+    }
+
+    /* Hide Streamlit Standard UI Elements (Menu, Footer) */
     #MainMenu {visibility: hidden;}
-    /* header {visibility: hidden;} */
     footer {visibility: hidden;}
     [data-testid="stToolbar"] {visibility: hidden; display: none;}
-    /* .stApp > header {display: none;} */
-    
-    /* Accent Color */
+    /* .stApp > header {display: none;} -- Keep header for toggle, but transparent */
     .accent { color: #58a6ff !important; font-weight: bold; }
     .red { color: #f85149 !important; font-weight: bold; }
     .green { color: #3fb950 !important; font-weight: bold; }
