@@ -46,17 +46,32 @@ st.markdown("""
     /* Header Optimization */
     header[data-testid="stHeader"] {
         background-color: transparent !important;
+        background: transparent !important;
+        visibility: visible !important;
         z-index: 999;
     }
     
     /* Ensure Sidebar Toggle (Arrow) is Visible */
-    button[data-testid="stSidebarCollapsedControl"] {
+    [data-testid="stSidebarCollapsedControl"] {
         display: block !important;
+        visibility: visible !important;
         color: #e6edf3 !important;
         background-color: transparent !important;
+        z-index: 100000 !important;
+        top: 1rem !important; /* Force position if needed */
     }
-    [data-testid="stSidebarCollapsedControl"] > svg {
+    
+    /* Target the SVG icon inside specifically */
+    [data-testid="stSidebarCollapsedControl"] svg {
         fill: #e6edf3 !important;
+        stroke: #e6edf3 !important;
+    }
+    
+    /* Additional coverage for newer Streamlit versions */
+    button[kind="header"] {
+        display: block !important;
+        visibility: visible !important;
+        z-index: 100000 !important;
     }
 
     /* Hide Streamlit Standard UI Elements (Menu, Footer) */
