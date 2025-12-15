@@ -198,6 +198,7 @@ def get_strategy_data(symbol=SYMBOL, params=None):
     mdd = drawdown.min()
 
     # Live Diagnosis
+    last_idx = df.index[-1]
     today_row = df.iloc[-1]
     prev_row = df.iloc[-2]
 
