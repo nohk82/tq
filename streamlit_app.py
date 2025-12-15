@@ -47,14 +47,43 @@ st.markdown("""
     /* 🛠️ SIDEBAR & HEADER CONFIGURATION       */
     /* ======================================= */
     
-    /* Ensure Sidebar is visible */
+    /* 1. Sidebar Text Brightness */
     section[data-testid="stSidebar"] {
-        display: block;
+        background-color: #161b22;
+        border-right: 1px solid #30363d;
+        color: #e6edf3 !important; /* Default Text Color */
+    }
+    
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] span,
+    section[data-testid="stSidebar"] div[data-testid="stMarkdown"],
+    section[data-testid="stSidebar"] div[data-testid="stSliderTickBarMin"],
+    section[data-testid="stSidebar"] div[data-testid="stSliderTickBarMax"] {
+        color: #e6edf3 !important; /* Force Bright Text */
+    }
+    
+    /* 2. Transparent Header (Remove White Bar) */
+    header[data-testid="stHeader"] {
+        background: transparent !important;
+        background-color: transparent !important;
+        border-bottom: none !important;
     }
 
-    /* Optional: Minimize clutter if needed, but keeping standard for safety */
-    /* #MainMenu {visibility: hidden;} */
-    /* footer {visibility: hidden;} */
+    /* 3. Ensure Sidebar Toggle is Visible & White */
+    [data-testid="stSidebarCollapsedControl"] {
+        display: block !important;
+        color: #e6edf3 !important;
+        background: transparent !important;
+        z-index: 999 !important;
+    }
+    [data-testid="stSidebarCollapsedControl"] > svg {
+        fill: #e6edf3 !important;
+    }
+
+    /* Hide standard UI elements */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    [data-testid="stToolbar"] {visibility: hidden; display: none;}
     
     /* Start of Accent Colors  */
     .accent { color: #58a6ff !important; font-weight: bold; }
