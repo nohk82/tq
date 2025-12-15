@@ -361,10 +361,6 @@ st.plotly_chart(fig_equity, use_container_width=True)
 # 📋 RECENT TRADES
 # =========================================================
 st.subheader("Recent Trades")
-# =========================================================
-# 📋 RECENT TRADES
-# =========================================================
-st.subheader("Recent Trades")
 if trades:
     # Use Custom HTML Table to:
     # 1. Distinguish Buy/Sell separately (separate rows/colors)
@@ -372,41 +368,41 @@ if trades:
     # 3. Dark background
     
     html_table = """
-    <style>
-        .trade-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-family: 'Outfit', sans-serif;
-            font-size: 0.9em;
-        }
-        .trade-table th {
-            text-align: left;
-            padding: 10px;
-            color: #8b949e;
-            border-bottom: 1px solid #30363d;
-        }
-        .trade-table td {
-            padding: 10px;
-            border-bottom: 1px solid #21262d;
-            color: #c9d1d9;
-        }
-        .trade-row:hover { background-color: #161b22; }
-        .type-buy { color: #3fb950; font-weight: bold; }
-        .type-sell { color: #f85149; font-weight: bold; }
-        .profit-pos { color: #58a6ff; }
-        .profit-neg { color: #f85149; }
-    </style>
-    <table class="trade-table">
-        <thead>
-            <tr>
-                <th>Type</th>
-                <th>Date</th>
-                <th>Price</th>
-                <th>Info</th>
-            </tr>
-        </thead>
-        <tbody>
-    """
+<style>
+    .trade-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.9em;
+    }
+    .trade-table th {
+        text-align: left;
+        padding: 10px;
+        color: #8b949e;
+        border-bottom: 1px solid #30363d;
+    }
+    .trade-table td {
+        padding: 10px;
+        border-bottom: 1px solid #21262d;
+        color: #c9d1d9;
+    }
+    .trade-row:hover { background-color: #161b22; }
+    .type-buy { color: #3fb950; font-weight: bold; }
+    .type-sell { color: #f85149; font-weight: bold; }
+    .profit-pos { color: #58a6ff; }
+    .profit-neg { color: #f85149; }
+</style>
+<table class="trade-table">
+    <thead>
+        <tr>
+            <th>Type</th>
+            <th>Date</th>
+            <th>Price</th>
+            <th>Info</th>
+        </tr>
+    </thead>
+    <tbody>
+"""
     
     for t in trades: # trades is already sorted newest first by strategy_core
         t_type = t['type']
@@ -426,13 +422,13 @@ if trades:
             info_html = "<span style='color: #444'>Entry</span>"
             
         row_html = f"""
-        <tr class="trade-row">
-            <td class="{type_class}">{t_type}</td>
-            <td>{t_date}</td>
-            <td>{t_price}</td>
-            <td>{info_html}</td>
-        </tr>
-        """
+    <tr class="trade-row">
+        <td class="{type_class}">{t_type}</td>
+        <td>{t_date}</td>
+        <td>{t_price}</td>
+        <td>{info_html}</td>
+    </tr>
+"""
         html_table += row_html
         
     html_table += "</tbody></table>"
