@@ -222,14 +222,14 @@ st.markdown("""
 with st.sidebar:
     st.markdown("## Strategy<span class='accent'>Pro</span>", unsafe_allow_html=True)
     
-    # Symbol & Refresh
+    # Symbol & Search Button
     c1, c2 = st.columns([3, 1])
     with c1:
         symbol = st.text_input("Target Symbol", value="TQQQ")
     with c2:
-        st.write("") # Spacer
-        st.write("") 
-        if st.button("⟳"):
+        # Align button with input box (approx 28px top margin)
+        st.markdown("<div style='margin-top: 29px;'></div>", unsafe_allow_html=True)
+        if st.button("🔍", key="search_btn", help="Search"):
             st.rerun()
 
     # Start Date (Default: 2010-02-01)
