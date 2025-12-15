@@ -31,6 +31,17 @@ st.markdown("""
         background-color: #161b22;
         border-right: 1px solid #30363d;
     }
+    /* Compact Sidebar Elements */
+    section[data-testid="stSidebar"] .st-emotion-cache-16txtl3 {
+        padding-top: 2rem;
+        padding-bottom: 1rem;
+    }
+    section[data-testid="stSidebar"] .stElementContainer {
+        margin-bottom: 0.2rem !important;
+    }
+    section[data-testid="stSidebar"] hr {
+        margin: 1rem 0 !important;
+    }
     
     /* Accent Color */
     .accent { color: #58a6ff !important; font-weight: bold; }
@@ -216,7 +227,7 @@ html_stats = f"""
         <div class="metric-val">${diag['price']:,.2f}</div>
     </div>
     <div class="top-item">
-        <div class="metric-lbl">MA(200)</div>
+        <div class="metric-lbl">MA({params['ma_period']})</div>
         <div class="metric-val">${diag['ma']:,.2f}</div>
     </div>
     <div class="top-item">
@@ -298,7 +309,7 @@ with c1:
     st.markdown(f"""
     <div class='metric-box'>
         <div class='metric-lbl'>Total Trades</div>
-        <div class='metric-val'>{data['total_trades']}</div>
+        <div class='metric-val'>{data['total_trades']} <span style='font-size:0.6em; color:#8b949e'>(Win {data['win_count']})</span></div>
         <div class='metric-lbl' style='margin-top:10px'>Win Rate</div>
         <div class='metric-val accent'>{data['win_rate']:.1f}%</div>
     </div>
@@ -411,7 +422,8 @@ fig_tech.update_layout(
     xaxis=dict(
         showgrid=True, 
         gridcolor='#21262d', # Dark Gray Grid
-        tickformat="%Y-%m-%d" # Show Dates
+        tickformat="%Y-%m-%d", # Show Dates Explicitly
+        type="date" # Ensure Date Axis
     ),
     yaxis=dict(
         showgrid=True, 
