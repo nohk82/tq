@@ -132,10 +132,10 @@ with st.spinner('Calculating Strategy...'):
 # 1. TOP METRICS
 # Row 1: Market Info
 m1, m2, m3, m4 = st.columns(4)
-m1.metric("Price", f"${data['current_price']:,.2f}")
-m2.metric("MA(200)", f"${data['current_ma']:,.2f}")
-m3.metric("RSI(W)", f"{data['current_rsi_w']:.1f}")
-m4.metric("RSI(D)", f"{data['current_rsi_d']:.1f}")
+m1.metric("Price", f"${data['diagnosis']['price']:,.2f}")
+m2.metric("MA(200)", f"${data['diagnosis']['ma']:,.2f}")
+m3.metric("RSI(W)", f"{data['diagnosis']['rsi_w']:.1f}")
+m4.metric("RSI(D)", f"{data['diagnosis']['rsi_d']:.1f}")
 
 st.markdown("<div style='height: 10px'></div>", unsafe_allow_html=True)
 
